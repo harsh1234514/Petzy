@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}EcommerceShop - Premium Shopping Experience{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="hero-content">
+            <h1 class="hero-title">Welcome to EcommerceShop</h1>
+            <p class="hero-subtitle">Discover premium quality products with exceptional value and outstanding customer service</p>
+            <div class="hero-buttons">
+                <a href="{% url 'products:product_list' %}" class="btn btn-light btn-lg me-3">
+                    <i class="fas fa-shopping-bag me-2"></i>Shop Now
+                </a>
+                <a href="#featured" class="btn btn-outline-light btn-lg">
+                    <i class="fas fa-star me-2"></i>Featured Products
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Categories Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="section-title">
+            <h2>Shop by Category</h2>
+            <p class="text-muted">Explore our wide range of product categories</p>
+        </div>
+        
+        <div class="row g-4">
+            {% for category in categories %}
+            <div class="col-md-4 col-lg-2">
+                <a href="{% url 'products:category_detail' category.slug %}" class="category-card" 
+                   style="background-image: url('{% if category.image %}{{ category.image.url }}{% else %}https://via.placeholder.com/300x200/667eea/ffffff?text={{ category.name }}{% endif %}');">
+                    <h3 class="category-title">{{ category.name }}</h3>
+                </a>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p class="text-muted">No categories available at the moment.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products Section -->
+<section id="featured" class="featured-section">
+    <div class="container">
+        <div class="section-title">
+            <h2>Featured Products</h2>
+            <p class="text-muted">Hand-picked products just for you</p>
+        </div>
+        
+        <div class="row g-4">
+            {% for product in featured_products %}
+            <div class="col-md-6 col-lg-3">
+                <div class="card product-card">
+                    <div class="product-image">
+                        <img src="{% if product.image %}{{ product.image.url }}{% else %}https://via.placeholder.com/300x250/f8f9fa/6c757d?text={{ product.name }}{% endif %}" 
+                             alt="{{ product.name }}" class="card-img-top">
+                        {% if product.featured %}
+                        <span class="product-badge">Featured</span>
+                        {% endif %}
+                    </div>
+                    <div class="card-body product-info">
+                        <h5 class="product-title">{{ product.name }}</h5>
+                        <p class="text-muted small">{{ product.category.name }}</p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="product-price">${{ product.price }}</span>
+                            {% if product.is_in_stock %}
+                                <button class="btn btn-primary btn-sm" onclick="addToCart({{ product.id }})">
+                                    <i class="fas fa-cart-plus"></i> Add to Cart
+                                </button>
+                            {% else %}
+                                <span class="btn btn-secondary btn-sm disabled">Out of Stock</span>
+                            {% endif %}
+                        </div>
+                        <div class="mt-2">
+                            <a href="{% url 'products:product_detail' product.slug %}" class="btn btn-outline-primary btn-sm w-100">
+                                <i class="fas fa-eye"></i> View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center">
+                <p class="text-muted">No featured products available at the moment.</p>
+                <a href="{% url 'products:product_list' %}" class="btn btn-primary">
+                    <i class="fas fa-shopping-bag me-2"></i>Browse All Products
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        
+        {% if featured_products %}
+        <div class="text-center mt-5">
+            <a href="{% url 'products:product_list' %}" class="btn btn-primary btn-lg">
+                <i class="fas fa-shopping-bag me-2"></i>View All Products
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-md-3 text-center">
+                <div class="feature-item">
+                    <i class="fas fa-shipping-fast fa-3x text-primary mb-3"></i>
+                    <h5>Fast Shipping</h5>
+                    <p class="text-muted">Free shipping on orders over $50</p>
+                </div>
+            </div>
+            <div class="col-md-3 text-center">
+                <div class="feature-item">
+                    <i class="fas fa-shield-alt fa-3x text-primary mb-3"></i>
+                    <h5>Secure Payment</h5>
+                    <p class="text-muted">100% secure payment processing</p>
+                </div>
+            </div>
+            <div class="col-md-3 text-center">
+                <div class="feature-item">
+                    <i class="fas fa-undo fa-3x text-primary mb-3"></i>
+                    <h5>Easy Returns</h5>
+                    <p class="text-muted">30-day return policy</p>
+                </div>
+            </div>
+            <div class="col-md-3 text-center">
+                <div class="feature-item">
+                    <i class="fas fa-headset fa-3x text-primary mb-3"></i>
+                    <h5>24/7 Support</h5>
+                    <p class="text-muted">Round-the-clock customer support</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
